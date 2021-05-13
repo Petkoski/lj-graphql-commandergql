@@ -28,7 +28,12 @@ namespace CommanderGQL
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(opt 
+            /*
+             * EF Core 5.0 introduces AddDbContextFactory and AddPooledDbContextFactory 
+             * to register a factory for creating DbContext instances in the application's 
+             * dependency injection (D.I.) container.
+             */
+            services.AddPooledDbContextFactory<AppDbContext>(opt 
                 => opt.UseSqlServer(_configuration.GetConnectionString("CommanderGQLConnectionString")));
 
             //Adding GraphQL service
