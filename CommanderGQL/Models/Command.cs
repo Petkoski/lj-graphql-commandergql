@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace CommanderGQL.Models
 {
-    public class Platform
+    public class Command
     {
         [Key]
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
-        public string LicenseKey { get; set; }
-        public ICollection<Command> Commands { get; set; } = new List<Command>();
+        public string HowTo { get; set; }
+        [Required]
+        public string CommandLine { get; set; }
+        [Required]
+        public int PlatformId { get; set; }
+        public Platform Platform { get; set; }
     }
 }
