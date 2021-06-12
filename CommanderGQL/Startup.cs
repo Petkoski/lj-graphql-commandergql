@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HotChocolate;
+using CommanderGQL.GraphQL.Platforms;
 
 namespace CommanderGQL
 {
@@ -40,6 +41,7 @@ namespace CommanderGQL
             services
                 .AddGraphQLServer()
                 .AddQueryType<Query>()
+                .AddType<PlatformType>()
                 .AddProjections();
         }
 
