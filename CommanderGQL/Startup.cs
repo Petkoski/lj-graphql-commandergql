@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HotChocolate;
 using CommanderGQL.GraphQL.Platforms;
+using CommanderGQL.GraphQL.Commands;
 
 namespace CommanderGQL
 {
@@ -42,7 +43,11 @@ namespace CommanderGQL
                 .AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddType<PlatformType>()
-                .AddProjections();
+                .AddType<CommandType>()
+                //.AddProjections()
+                .AddFiltering()
+                .AddSorting()
+                ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
