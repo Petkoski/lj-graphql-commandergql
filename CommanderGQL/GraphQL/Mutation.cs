@@ -4,9 +4,11 @@ using CommanderGQL.GraphQL.Platforms;
 using CommanderGQL.Models;
 using HotChocolate;
 using HotChocolate.Data;
+using HotChocolate.Subscriptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CommanderGQL.GraphQL
@@ -17,8 +19,11 @@ namespace CommanderGQL.GraphQL
          * [UseDbContext(typeof(AppDbContext))] - make use of multithreaded dbcontext
          */
         [UseDbContext(typeof(AppDbContext))]
-        public async Task<AddPlatformPayload> AddPlatformAsync(AddPlatformInput input,
-            [ScopedService] AppDbContext context)
+        public async Task<AddPlatformPayload> AddPlatformAsync(
+            AddPlatformInput input,
+            [ScopedService] AppDbContext context,
+            [Service] ITopicEventSender eventSender,
+            CancellationToken cancelationToken)
         {
             var platform = new Platform
             {
@@ -26,11 +31,16 @@ namespace CommanderGQL.GraphQL
             };
             context.Platforms.Add(platform);
             await context.SaveChangesAsync();
+
+            //Send event message:
+            await eventSender.SendAsync(nameof(Subscription.OnPlatformAdded), platform, cancelationToken);
+
             return new AddPlatformPayload(platform);
         }
 
         [UseDbContext(typeof(AppDbContext))]
-        public async Task<AddCommandPayload> AddCommandAsync(AddCommandInput input,
+        public async Task<AddCommandPayload> AddCommandAsync(
+            AddCommandInput input,
             [ScopedService] AppDbContext context)
         {
             var command = new Command
